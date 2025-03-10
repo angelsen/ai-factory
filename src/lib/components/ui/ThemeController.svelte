@@ -10,15 +10,18 @@
 		additionalThemes?: any; // Additional themes beyond light/dark
 	}
 
+	// Import theme constants
+	import { BASE_THEMES, ADDITIONAL_THEMES } from '$lib/theme';
+
 	let {
 		position = 'end',
 		size = 'sm',
 		menuType = 'dropdown',
-		additionalThemes = ['synthwave', 'cupcake'] as string[]
+		additionalThemes = ADDITIONAL_THEMES
 	}: Props = $props();
 
 	let currentTheme = $state('');
-	const baseThemes = ['light', 'dark', 'system'];
+	const baseThemes = BASE_THEMES;
 	const allThemes = [...baseThemes, ...additionalThemes];
 
 	// Properly type the themeIcons with index signature for Lucide icons

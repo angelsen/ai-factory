@@ -11,6 +11,7 @@
     disabled?: boolean;
     href?: string;
     formAction?: string;
+    className?: string; // Custom CSS classes to be added
     children?: import('svelte').Snippet;
   }
 
@@ -22,6 +23,7 @@
     disabled = false,
     href = "",
     formAction = "",
+    className = "",
     children
   }: Props = $props();
   
@@ -32,7 +34,7 @@
 
 {#if href}
   <a {href} 
-    class="btn {variant ? `btn-${variant}` : ''} {size ? `btn-${size}` : ''} {fullWidth ? 'btn-block' : ''}"
+    class="btn {variant ? `btn-${variant}` : ''} {size ? `btn-${size}` : ''} {fullWidth ? 'btn-block' : ''} {className}"
     class:disabled
     onclick={handleClick}>
     {@render children?.()}
@@ -42,7 +44,7 @@
     {type} 
     {disabled} 
     formaction={formAction || undefined}
-    class="btn {variant ? `btn-${variant}` : ''} {size ? `btn-${size}` : ''} {fullWidth ? 'btn-block' : ''}"
+    class="btn {variant ? `btn-${variant}` : ''} {size ? `btn-${size}` : ''} {fullWidth ? 'btn-block' : ''} {className}"
     onclick={handleClick}>
     {@render children?.()}
   </button>

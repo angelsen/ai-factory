@@ -1,5 +1,12 @@
 // Available themes from app.css
-const AVAILABLE_THEMES = ['light', 'dark', 'synthwave', 'cupcake'];
+// Base themes are handled specially in ThemeController
+export const BASE_THEMES = ['light', 'dark', 'system'];
+
+// All available themes (add new themes here)
+export const AVAILABLE_THEMES = ['light', 'dark', 'synthwave', 'cupcake', 'cyberpunk'];
+
+// Only additional themes (excluding base themes)
+export const ADDITIONAL_THEMES = AVAILABLE_THEMES.filter(theme => !BASE_THEMES.includes(theme) || theme === 'system');
 
 // This function initializes the theme based on localStorage and system preference
 export function initTheme(): void {
@@ -9,12 +16,15 @@ export function initTheme(): void {
   // Script to run in the client
   const themeInitScript = `
     (function() {
+      // Import available themes dynamically
+      const AVAILABLE_THEMES = ${JSON.stringify(AVAILABLE_THEMES)};
+      
       // Get theme from localStorage or default to system preference
       const storedTheme = localStorage.getItem('theme');
       
       if (storedTheme && storedTheme !== 'system') {
         // Use explicitly set preference if it's a valid theme
-        if (${JSON.stringify(AVAILABLE_THEMES)}.includes(storedTheme)) {
+        if (AVAILABLE_THEMES.includes(storedTheme)) {
           document.documentElement.setAttribute('data-theme', storedTheme);
         }
       } else {

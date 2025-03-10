@@ -10,7 +10,9 @@
 		strokeDasharray = 0,
 		numSquares = 50,
 		maxOpacity = 0.5,
-		pathOpacity = 0.2,
+		pathOpacity = 0.5,
+		squareColor = 'primary', // Use DaisyUI primary color by default
+		gridColor = 'primary', // Use DaisyUI primary color by default
 		duration = 4,
 		repeatDelay = 0.5,
 		className = ''
@@ -21,6 +23,7 @@
 		id: number;
 		pos: [number, number];
 		visible: boolean;
+		nextUpdateTime: number;
 	};
 
 	type Dimensions = {
@@ -34,8 +37,9 @@
 	let squares = $state<SquareData[]>([]);
 	let uniqueId = Math.random().toString(36).substring(2, 9);
 	let resizeObserver: ResizeObserver | null = null;
-	let animationTimers: number[] = [];
-	
+	let animationTimer: ReturnType<typeof setTimeout> | null = null;
+	let initialized = false;
+
 	// Get random position based on container dimensions
 	function getPos(): [number, number] {
 		return [
@@ -44,87 +48,79 @@
 		];
 	}
 
-	// Generate initial squares
+	// Generate initial squares with staggered start times
 	function generateSquares(count: number): SquareData[] {
+		const now = Date.now();
 		return Array.from({ length: count }, (_, i) => ({
 			id: i,
 			pos: getPos(),
-			visible: false
+			visible: false,
+			// Stagger initial appearance
+			nextUpdateTime: now + i * 100
 		}));
 	}
 
-	// Start animations with staggered timing
-	function startAnimations(): void {
-		// Clear any existing timers
-		cleanupTimers();
-		
-		// Animate each square with staggered delays
-		squares.forEach((square, index) => {
-			// Stagger the initial appearance
-			const showTimer = setTimeout(() => {
-				squares = squares.map(sq => 
-					sq.id === index ? { ...sq, visible: true } : sq
-				);
-				
-				// Schedule the square to disappear after duration
-				const hideTimer = setTimeout(() => {
-					squares = squares.map(sq => 
-						sq.id === index ? { ...sq, visible: false } : sq
-					);
-					
-					// Then change position and restart cycle
-					const moveTimer = setTimeout(() => {
-						squares = squares.map(sq => 
-							sq.id === index ? { ...sq, pos: getPos(), visible: true } : sq
-						);
-						
-						// Create ongoing cycle
-						const cycleTimer = setInterval(() => {
-							// First hide
-							squares = squares.map(sq => 
-								sq.id === index ? { ...sq, visible: false } : sq
-							);
-							
-							// Then move and show again
-							setTimeout(() => {
-								squares = squares.map(sq => 
-									sq.id === index ? { ...sq, pos: getPos(), visible: true } : sq
-								);
-							}, repeatDelay * 1000);
-						}, (duration + repeatDelay) * 1000);
-						
-						animationTimers.push(cycleTimer);
-					}, repeatDelay * 1000);
-					
-					animationTimers.push(moveTimer);
-				}, duration * 1000);
-				
-				animationTimers.push(hideTimer);
-			}, index * 100); // 100ms stagger between squares
-			
-			animationTimers.push(showTimer);
-		});
-	}
-	
-	// Clean up all animation timers
-	function cleanupTimers(): void {
-		animationTimers.forEach(timer => clearTimeout(timer));
-		animationTimers = [];
+	// Single animation function that manages all squares
+	function animateSquares(): void {
+		if (animationTimer !== null) {
+			clearTimeout(animationTimer);
+		}
+
+		// Function to run animation loop
+		const updateSquares = () => {
+			const now = Date.now();
+			let hasChanges = false;
+			const updatedSquares = [...squares];
+
+			// Process each square
+			for (let i = 0; i < updatedSquares.length; i++) {
+				const square = updatedSquares[i];
+
+				// Check if it's time to update this square
+				if (now >= square.nextUpdateTime) {
+					hasChanges = true;
+
+					if (square.visible) {
+						// If visible, hide it and schedule position change
+						square.visible = false;
+						square.nextUpdateTime = now + repeatDelay * 1000;
+					} else {
+						// If hidden, show it with new position
+						square.visible = true;
+						square.pos = getPos();
+						square.nextUpdateTime = now + duration * 1000;
+					}
+				}
+			}
+
+			// Only update state if changes were made
+			if (hasChanges) {
+				squares = updatedSquares;
+			}
+
+			// Continue animation loop
+			animationTimer = setTimeout(updateSquares, 50); // Check every 50ms
+		};
+
+		// Start animation loop
+		updateSquares();
 	}
 
-	// Handle dimension changes
+	// Initialize or update when dimensions change
 	function handleDimensionsChange(newWidth: number, newHeight: number): void {
-		// Only update if dimensions changed significantly
-		if (Math.abs(dimensions.width - newWidth) > 20 || 
-			Math.abs(dimensions.height - newHeight) > 20) {
-			
+		const isInitializing = !initialized && newWidth > 0 && newHeight > 0;
+		const hasSizeChanged =
+			initialized &&
+			(Math.abs(dimensions.width - newWidth) > 20 || Math.abs(dimensions.height - newHeight) > 20);
+
+		if (isInitializing || hasSizeChanged) {
 			dimensions = { width: newWidth, height: newHeight };
-			
-			// Generate new squares with the new dimensions
 			squares = generateSquares(numSquares);
-			
-			// Start animations
-			startAnimations();
+
+			if (!initialized) {
+				animateSquares();
+				initialized = true;
+			}
 		}
 	}
 
@@ -133,23 +129,16 @@
 		// Setup resize observer
 		resizeObserver = new ResizeObserver((entries) => {
 			for (let entry of entries) {
-				handleDimensionsChange(
-					entry.contentRect.width,
-					entry.contentRect.height
-				);
+				handleDimensionsChange(entry.contentRect.width, entry.contentRect.height);
 			}
 		});
 
 		if (containerRef) {
 			// Initialize with current dimensions
 			const rect = containerRef.getBoundingClientRect();
-			dimensions = { width: rect.width, height: rect.height };
-			
-			// Generate initial squares and start animations
-			squares = generateSquares(numSquares);
-			startAnimations();
-			
-			// Then observe for future dimension changes
+			handleDimensionsChange(rect.width, rect.height);
+
+			// Observe for future dimension changes
 			resizeObserver.observe(containerRef);
 		}
 	});
@@ -161,21 +150,20 @@
 			resizeObserver.unobserve(containerRef);
 			resizeObserver.disconnect();
 		}
-		
-		// Clean up all animation timers
-		cleanupTimers();
+
+		// Clean up animation timer
+		if (animationTimer !== null) {
+			clearTimeout(animationTimer);
+		}
 	});
 </script>
 
 <div
 	bind:this={containerRef}
-	class={`pointer-events-none absolute inset-0 h-full w-full ${className}`}
+	class={`pointer-events-none inset-0 w-full h-full overflow-hidden ${className}`}
 	aria-hidden="true"
 >
-	<svg
-		class="absolute inset-0 h-full w-full fill-gray-400/30 stroke-gray-400/30"
-		xmlns="http://www.w3.org/2000/svg"
-	>
+	<svg class="absolute inset-0 h-full w-full" xmlns="http://www.w3.org/2000/svg">
 		<defs>
 			<pattern
 				id={`grid-pattern-${uniqueId}`}
@@ -185,28 +173,43 @@
 				{x}
 				{y}
 			>
-				<path
-					d={`M.5 ${height}V.5H${width}`}
-					fill="none"
-					stroke="currentColor"
-					stroke-width="0.5"
-					stroke-dasharray={strokeDasharray}
+				<!-- Horizontal line -->
+				<line
+					x1="0"
+					y1="0"
+					x2={width}
+					y2="0"
+					stroke={`var(--color-${gridColor})`}
+					stroke-width="1.5"
+					opacity={pathOpacity}
+				/>
+				<!-- Vertical line -->
+				<line
+					x1="0"
+					y1="0"
+					x2="0"
+					y2={height}
+					stroke={`var(--color-${gridColor})`}
+					stroke-width="1.5"
 					opacity={pathOpacity}
 				/>
 			</pattern>
 		</defs>
+		<!-- Apply pattern to full SVG -->
 		<rect width="100%" height="100%" fill={`url(#grid-pattern-${uniqueId})`} />
-		<svg x={x} y={y} class="overflow-visible">
+
+		<!-- Animated squares -->
+		<svg {x} {y} class="overflow-visible">
 			{#each squares as square (square.id)}
 				<rect
 					width={width - 1}
 					height={height - 1}
 					x={square.pos[0] * width + 1}
 					y={square.pos[1] * height + 1}
-					fill="currentColor"
+					fill={`var(--color-${squareColor})`}
 					stroke-width="0"
 					opacity={square.visible ? maxOpacity : 0}
-					style="transition: opacity {duration/2}s ease-in-out;"
+					style="transition: opacity {duration / 2}s ease-in-out;"
 				/>
 			{/each}
 		</svg>
