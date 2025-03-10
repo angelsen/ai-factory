@@ -8,7 +8,11 @@
 		showThemeController?: boolean;
 	}
 
-	let { logo = 'AI Factory', githubUrl = 'https://github.com/angelsen/ai-factory', showThemeController = true }: Props = $props();
+	let {
+		logo = 'AI Factory',
+		githubUrl = 'https://github.com/angelsen/ai-factory',
+		showThemeController = true
+	}: Props = $props();
 </script>
 
 <div class="navbar bg-base-100 shadow-sm">

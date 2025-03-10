@@ -14,7 +14,7 @@
 		position = 'end',
 		size = 'sm',
 		menuType = 'dropdown',
-		additionalThemes = ['synthwave', 'cupcake']
+		additionalThemes = ['synthwave', 'cupcake'] as string[]
 	}: Props = $props();
 
 	let currentTheme = $state('');
@@ -29,7 +29,7 @@
 		dark: Moon,
 		system: Monitor,
 		// Default icon for additional themes
-		...Object.fromEntries(additionalThemes.map((theme) => [theme, Palette]))
+		...Object.fromEntries(additionalThemes.map((theme: string) => [theme, Palette]))
 	};
 
 	// Initialize theme on mount
@@ -81,36 +81,36 @@
 		<Moon class="swap-on h-5 w-5 fill-current" />
 	</label>
 {:else}
-	<!-- Dropdown theme selector using daisyUI's pattern but with proper ARIA roles -->
+	<!-- Dropdown theme selector using daisyUI's pattern with proper ARIA roles -->
 	{@const SvelteComponent_1 = themeIcons[currentTheme] || themeIcons.system}
-	<div class="dropdown dropdown-{position}">
+	<div class="dropdown dropdown-left">
 		<div
 			tabindex="0"
 			role="button"
 			aria-haspopup="menu"
-			class="btn btn-ghost btn-{size} btn-circle"
+			class="btn btn-ghost btn-{size} btn-circle m-1"
 		>
 			<SvelteComponent_1 class="h-5 w-5" />
 		</div>
 
-		<div class="dropdown-content bg-base-100 rounded-box z-[1] shadow">
-			<ul role="menu" class="menu p-2">
-				{#each allThemes as theme}
-					{@const SvelteComponent_2 = themeIcons[theme] || themeIcons.system}
-					<li role="none">
-						<button
-							role="menuitem"
-							class={currentTheme === theme ? 'active' : ''}
-							onclick={() => applyTheme(theme)}
-						>
-							<SvelteComponent_2
-								class="mr-2 h-4 w-4"
-							/>
-							<span class="capitalize">{theme}</span>
-						</button>
-					</li>
-				{/each}
-			</ul>
-		</div>
+		<ul
+			role="menu"
+			tabindex="0"
+			class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow"
+		>
+			{#each allThemes as theme}
+				{@const SvelteComponent_2 = themeIcons[theme] || themeIcons.system}
+				<li role="none">
+					<button
+						role="menuitem"
+						class={currentTheme === theme ? 'active' : ''}
+						onclick={() => applyTheme(theme)}
+					>
+						<SvelteComponent_2 class="mr-2 h-4 w-4" />
+						<span class="capitalize">{theme}</span>
+					</button>
+				</li>
+			{/each}
+		</ul>
 	</div>
 {/if}

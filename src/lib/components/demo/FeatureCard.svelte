@@ -40,7 +40,7 @@
   <p>{description}</p>
   
   {#if badgeLabels.length > 0}
-    <div class="card-actions justify-between mt-4">
+    <div class="card-actions justify-start mt-4 gap-2">
       {#each badgeLabels as label}
         <div class="badge badge-outline">{label}</div>
       {/each}

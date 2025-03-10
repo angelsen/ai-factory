@@ -1,22 +1,16 @@
 <script lang="ts">
-  import { run } from 'svelte/legacy';
-
   import { onMount, onDestroy } from 'svelte';
   import { EditorView, basicSetup } from 'codemirror';
   import { EditorState } from '@codemirror/state';
   import { json } from '@codemirror/lang-json';
-  import { 
-    createTheme, 
-    createThemeWatcher, 
-    getCurrentTheme
-  } from './CodeMirrorTheme';
 
   interface Props {
     value?: string;
-    onChange?: any;
+    onChange?: (val: string) => void;
     height?: string;
     readOnly?: boolean;
     lineWrapping?: boolean;
+    language?: string;
   }
 
   let {
@@ -24,35 +18,49 @@
     onChange = (val: string) => {},
     height = '300px',
     readOnly = false,
-    lineWrapping = false
+    lineWrapping = false,
+    language = 'json'
   }: Props = $props();
 
-  let editorContainer: HTMLElement = $state();
-  let editorView: EditorView = $state();
-  let disconnectThemeWatcher: () => void;
+  let editorContainer: HTMLElement | undefined = $state();
+  let editorView: EditorView | undefined = $state();
+  let prevReadOnly = $state(readOnly);
+  let prevLineWrapping = $state(lineWrapping);
 
-  // Handle theme changes
-  function handleThemeChange(themeName: string): void {
-    if (!editorView) return;
+  // Get language extension based on language name
+  function getLanguageExtension(language: string = 'json'): any {
+    // For now we only support JSON
+    return json();
+  }
+
+  // Create initial editor
+  function setupEditor(): void {
+    if (!editorContainer) return;
     
-    // Re-initialize the editor with the new theme
-    const content = editorView.state.doc.toString();
-    editorView.destroy();
+    // Clean up existing editor if any
+    if (editorView) {
+      editorView.destroy();
+    }
+    
+    // Create read-only extension if needed
+    const readOnlyExtension = readOnly ? EditorView.editable.of(false) : [];
+    
+    // Create line wrapping extension if needed
+    const lineWrappingExtension = lineWrapping ? EditorView.lineWrapping : [];
     
     const startState = EditorState.create({
-      doc: content,
+      doc: value,
       extensions: [
         basicSetup,
-        json(),
-        ...createTheme(themeName),
+        getLanguageExtension(language),
         EditorView.updateListener.of((update) => {
           if (update.docChanged) {
             const newValue = update.state.doc.toString();
             onChange(newValue);
           }
         }),
-        readOnly ? EditorView.editable.of(false) : [],
-        lineWrapping ? EditorView.lineWrapping : []
+        readOnlyExtension,
+        lineWrappingExtension
       ]
     });
 
@@ -60,53 +68,19 @@
       state: startState,
       parent: editorContainer
     });
+    
+    // Update previous values
+    prevReadOnly = readOnly;
+    prevLineWrapping = lineWrapping;
   }
 
   onMount(() => {
-    if (editorContainer) {
-      // Get initial theme
-      const initialTheme = getCurrentTheme();
-
-      // Create read-only extension if needed
-      const readOnlyExtension = readOnly ? EditorView.editable.of(false) : [];
-      
-      // Create line wrapping extension if needed
-      const lineWrappingExtension = lineWrapping ? EditorView.lineWrapping : [];
-      
-      const startState = EditorState.create({
-        doc: value,
-        extensions: [
-          basicSetup,
-          json(),
-          ...createTheme(initialTheme),
-          EditorView.updateListener.of((update) => {
-            if (update.docChanged) {
-              const newValue = update.state.doc.toString();
-              onChange(newValue);
-            }
-          }),
-          readOnlyExtension,
-          lineWrappingExtension
-        ]
-      });
-
-      editorView = new EditorView({
-        state: startState,
-        parent: editorContainer
-      });
-      
-      // Set up theme watcher
-      disconnectThemeWatcher = createThemeWatcher(handleThemeChange);
-    }
+    setupEditor();
   });
 
   onDestroy(() => {
     if (editorView) {
       editorView.destroy();
-    }
-    
-    if (disconnectThemeWatcher) {
-      disconnectThemeWatcher();
     }
   });
 
@@ -141,9 +115,17 @@
   }
 
   // Update content reactively when value prop changes
-  run(() => {
+  $effect(() => {
     if (editorView && value !== editorView.state.doc.toString()) {
       updateContent(value);
+    }
+  });
+
+  // Watch for readOnly or lineWrapping changes
+  $effect(() => {
+    // Only rebuild editor if these props have changed
+    if (editorView && (readOnly !== prevReadOnly || lineWrapping !== prevLineWrapping)) {
+      setupEditor();
     }
   });
 </script>
@@ -164,10 +146,5 @@
   :global(.json-editor-container .cm-scroller) {
     overflow: auto;
     height: 100%;
-  }
-
-  /* Add smooth transitions between themes */
-  :global(.json-editor-container *) {
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
   }
 </style>

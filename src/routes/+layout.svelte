@@ -18,7 +18,7 @@
 	<Navbar logo="AI Factory" githubUrl="https://github.com/angelsen/ai-factory" />
 
 	<main class="flex-grow">
-		let {children} = $props();
+		{@render children()}
 	</main>
 
 	<footer class="footer footer-center bg-base-200 text-base-content p-4">
