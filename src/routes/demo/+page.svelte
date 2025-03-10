@@ -15,13 +15,14 @@
       buttonHref="/demo/lucia"
     />
 
-    <!-- Data Collection Card -->
+    <!-- JSON Editor Card -->
     <FeatureCard
-      title="Data Collection"
-      description="Tools and interfaces for collecting, processing, and storing data."
-      imageUrl="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-      buttonText="Coming Soon"
+      title="JSON Editor"
+      description="Interactive JSON editor with syntax highlighting, validation, and formatting."
+      badgeLabels={["CodeMirror", "JSON", "Svelte"]}
+      buttonText="Try JSON Editor"
       buttonVariant="secondary"
+      buttonHref="/demo/json-editor"
     />
 
     <!-- AI Workflow Card -->
