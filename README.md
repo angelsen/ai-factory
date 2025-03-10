@@ -2,6 +2,8 @@
 
 A comprehensive starter template for modern SvelteKit applications with essential integrations.
 
+[View tagged release (2025-03-10)](https://github.com/angelsen/ai-factory/tree/2025-03-10)
+
 ## Features
 
 - **SvelteKit**: Modern Svelte framework with server-side rendering
@@ -13,8 +15,8 @@ A comprehensive starter template for modern SvelteKit applications with essentia
 ## Quick Start
 
 ```bash
-# Clone the repository
-git clone https://github.com/angelsen/ai-factory.git my-app
+# Clone the repository (specific release version)
+git clone -b 2025-03-10 https://github.com/angelsen/ai-factory.git my-app
 
 # Navigate to project
 cd my-app
