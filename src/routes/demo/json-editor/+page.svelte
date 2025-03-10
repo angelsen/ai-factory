@@ -5,11 +5,11 @@
 	import ThemeController from '$lib/components/ui/ThemeController.svelte';
 
 	// Editor reference
-	let jsonEditor: JsonEditor;
-	let readOnly = false;
-	let lineWrapping = true;
+	let jsonEditor: JsonEditor = $state();
+	let readOnly = $state(false);
+	let lineWrapping = $state(true);
 
-	let jsonValue = JSON.stringify(
+	let jsonValue = $state(JSON.stringify(
 		{
 			name: 'JSON Editor Demo',
 			description: 'A simple JSON editor using CodeMirror 6',
@@ -34,10 +34,10 @@
 		},
 		null,
 		2
-	);
+	));
 
 	// Initialize with formatted value from the start
-	let formattedValue = jsonValue;
+	let formattedValue = $state(jsonValue);
 
 	onMount(() => {
 		// Process initial value
@@ -83,16 +83,16 @@
 		<Card title="JSON Editor">
 			<div class="mb-4 flex flex-wrap items-center justify-between gap-2">
 				<div class="flex flex-wrap gap-2">
-					<button class="btn btn-sm btn-primary" on:click={formatJson}>Format</button>
+					<button class="btn btn-sm btn-primary" onclick={formatJson}>Format</button>
 					<button
 						class="btn btn-sm {readOnly ? 'btn-error' : 'btn-secondary'}"
-						on:click={toggleReadOnly}
+						onclick={toggleReadOnly}
 					>
 						{readOnly ? 'Editable' : 'Read-only'}
 					</button>
 					<button
 						class="btn btn-sm {lineWrapping ? 'btn-success' : 'btn-secondary'}"
-						on:click={toggleLineWrapping}
+						onclick={toggleLineWrapping}
 					>
 						{lineWrapping ? 'Wrapped' : 'No Wrap'}
 					</button>

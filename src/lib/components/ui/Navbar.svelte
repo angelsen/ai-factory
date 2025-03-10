@@ -2,9 +2,13 @@
 	import { Menu, Github } from '@lucide/svelte';
 	import ThemeController from './ThemeController.svelte';
 
-	export let logo = 'AI Factory';
-	export let githubUrl = 'https://github.com/angelsen/ai-factory';
-	export let showThemeController = true;
+	interface Props {
+		logo?: string;
+		githubUrl?: string;
+		showThemeController?: boolean;
+	}
+
+	let { logo = 'AI Factory', githubUrl = 'https://github.com/angelsen/ai-factory', showThemeController = true }: Props = $props();
 </script>
 
 <div class="navbar bg-base-100 shadow-sm">

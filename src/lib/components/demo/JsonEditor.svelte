@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import { onMount, onDestroy } from 'svelte';
   import { EditorView, basicSetup } from 'codemirror';
   import { EditorState } from '@codemirror/state';
@@ -9,14 +11,24 @@
     getCurrentTheme
   } from './CodeMirrorTheme';
 
-  export let value = '';
-  export let onChange = (val: string) => {};
-  export let height = '300px';
-  export let readOnly = false;
-  export let lineWrapping = false;
+  interface Props {
+    value?: string;
+    onChange?: any;
+    height?: string;
+    readOnly?: boolean;
+    lineWrapping?: boolean;
+  }
 
-  let editorContainer: HTMLElement;
-  let editorView: EditorView;
+  let {
+    value = '',
+    onChange = (val: string) => {},
+    height = '300px',
+    readOnly = false,
+    lineWrapping = false
+  }: Props = $props();
+
+  let editorContainer: HTMLElement = $state();
+  let editorView: EditorView = $state();
   let disconnectThemeWatcher: () => void;
 
   // Handle theme changes
@@ -129,9 +141,11 @@
   }
 
   // Update content reactively when value prop changes
-  $: if (editorView && value !== editorView.state.doc.toString()) {
-    updateContent(value);
-  }
+  run(() => {
+    if (editorView && value !== editorView.state.doc.toString()) {
+      updateContent(value);
+    }
+  });
 </script>
 
 <div class="json-editor-container" bind:this={editorContainer} style="height: {height}"></div>

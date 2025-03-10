@@ -3,7 +3,7 @@
   import { ArrowLeft, LogOut, User } from '@lucide/svelte';
   import Button from '$lib/components/ui/Button.svelte';
   
-  export let user = { username: "", id: "" };
+  let { user = { username: "", id: "" } } = $props();
 </script>
 
 <div class="flex flex-col sm:flex-row items-center gap-6 my-6">

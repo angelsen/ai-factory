@@ -3,7 +3,11 @@
   import { UserPlus, LogIn, XCircle, Github } from '@lucide/svelte';
   import Button from '$lib/components/ui/Button.svelte';
   
-  export let errorMessage = "";
+  interface Props {
+    errorMessage?: string;
+  }
+
+  let { errorMessage = "" }: Props = $props();
 </script>
 
 <form method="post" action="?/login" use:enhance class="space-y-4">

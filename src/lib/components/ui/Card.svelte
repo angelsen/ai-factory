@@ -1,14 +1,35 @@
 <script lang="ts">
-  export let title = "";
-  export let size = "md"; // xs, sm, md, lg, xl
-  export let bordered = false;
-  export let dashed = false;
-  export let imageFull = false;
-  export let sideBySide = false;
-  export let bgColor = "bg-base-100";
-  export let shadow = "shadow-sm";
-  export let width = "w-full";
-  export let classes = "";
+  interface Props {
+    title?: string;
+    size?: string; // xs, sm, md, lg, xl
+    bordered?: boolean;
+    dashed?: boolean;
+    imageFull?: boolean;
+    sideBySide?: boolean;
+    bgColor?: string;
+    shadow?: string;
+    width?: string;
+    classes?: string;
+    image?: import('svelte').Snippet;
+    children?: import('svelte').Snippet;
+    actions?: import('svelte').Snippet;
+  }
+
+  let {
+    title = "",
+    size = "md",
+    bordered = false,
+    dashed = false,
+    imageFull = false,
+    sideBySide = false,
+    bgColor = "bg-base-100",
+    shadow = "shadow-sm",
+    width = "w-full",
+    classes = "",
+    image,
+    children,
+    actions
+  }: Props = $props();
 </script>
 
 <div class="card {bgColor} {shadow} {width} {classes} 
@@ -22,9 +43,9 @@
   {imageFull ? 'image-full' : ''} 
   {sideBySide ? 'card-side' : ''}">
   
-  {#if $$slots.image}
+  {#if image}
     <figure>
-      <slot name="image"></slot>
+      {@render image?.()}
     </figure>
   {/if}
   
@@ -33,11 +54,11 @@
       <h2 class="card-title">{title}</h2>
     {/if}
     
-    <slot></slot>
+    {@render children?.()}
     
-    {#if $$slots.actions}
+    {#if actions}
       <div class="card-actions justify-end">
-        <slot name="actions"></slot>
+        {@render actions?.()}
       </div>
     {/if}
   </div>

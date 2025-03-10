@@ -3,13 +3,27 @@
   
   const dispatch = createEventDispatcher<{click: MouseEvent}>();
   
-  export let type: 'button' | 'submit' | 'reset' = "button";
-  export let variant = ""; // primary, secondary, accent, ghost, link, outline, error
-  export let size = ""; // lg, md, sm, xs
-  export let fullWidth = false;
-  export let disabled = false;
-  export let href = "";
-  export let formAction = "";
+  interface Props {
+    type?: 'button' | 'submit' | 'reset';
+    variant?: string; // primary, secondary, accent, ghost, link, outline, error
+    size?: string; // lg, md, sm, xs
+    fullWidth?: boolean;
+    disabled?: boolean;
+    href?: string;
+    formAction?: string;
+    children?: import('svelte').Snippet;
+  }
+
+  let {
+    type = "button",
+    variant = "",
+    size = "",
+    fullWidth = false,
+    disabled = false,
+    href = "",
+    formAction = "",
+    children
+  }: Props = $props();
   
   function handleClick(event: MouseEvent) {
     dispatch('click', event);
@@ -20,8 +34,8 @@
   <a {href} 
     class="btn {variant ? `btn-${variant}` : ''} {size ? `btn-${size}` : ''} {fullWidth ? 'btn-block' : ''}"
     class:disabled
-    on:click={handleClick}>
-    <slot></slot>
+    onclick={handleClick}>
+    {@render children?.()}
   </a>
 {:else}
   <button 
@@ -29,7 +43,7 @@
     {disabled} 
     formaction={formAction || undefined}
     class="btn {variant ? `btn-${variant}` : ''} {size ? `btn-${size}` : ''} {fullWidth ? 'btn-block' : ''}"
-    on:click={handleClick}>
-    <slot></slot>
+    onclick={handleClick}>
+    {@render children?.()}
   </button>
 {/if}

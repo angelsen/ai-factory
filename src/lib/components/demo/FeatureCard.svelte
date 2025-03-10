@@ -2,15 +2,29 @@
   import Card from '$lib/components/ui/Card.svelte';
   import Button from '$lib/components/ui/Button.svelte';
   
-  export let title = "";
-  export let description = "";
-  export let imageUrl = "";
-  export let badgeLabels: string[] = [];
-  export let buttonText = "";
-  export let buttonVariant = "primary";
-  export let buttonHref = "";
-  export let sideBySide = false;
-  export let primaryCard = false;
+  interface Props {
+    title?: string;
+    description?: string;
+    imageUrl?: string;
+    badgeLabels?: string[];
+    buttonText?: string;
+    buttonVariant?: string;
+    buttonHref?: string;
+    sideBySide?: boolean;
+    primaryCard?: boolean;
+  }
+
+  let {
+    title = "",
+    description = "",
+    imageUrl = "",
+    badgeLabels = [],
+    buttonText = "",
+    buttonVariant = "primary",
+    buttonHref = "",
+    sideBySide = false,
+    primaryCard = false
+  }: Props = $props();
 </script>
 
 <Card 
@@ -19,7 +33,9 @@
   bgColor={primaryCard ? "bg-primary text-primary-content" : "bg-base-100"}
   shadow="shadow-sm"
 >
-  <img src={imageUrl} alt={title} slot="image" class={!imageUrl ? "hidden" : ""} />
+  {#snippet image()}
+    <img src={imageUrl} alt={title}  class={!imageUrl ? "hidden" : ""} />
+  {/snippet}
   
   <p>{description}</p>
   
@@ -31,12 +47,14 @@
     </div>
   {/if}
   
-  <div slot="actions" class={!buttonText ? "hidden" : ""}>
-    <Button 
-      variant={buttonVariant} 
-      href={buttonHref || ""}
-    >
-      {buttonText}
-    </Button>
-  </div>
+  {#snippet actions()}
+    <div  class={!buttonText ? "hidden" : ""}>
+      <Button 
+        variant={buttonVariant} 
+        href={buttonHref || ""}
+      >
+        {buttonText}
+      </Button>
+    </div>
+  {/snippet}
 </Card>

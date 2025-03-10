@@ -3,12 +3,21 @@
 	import { Sun, Moon, Monitor, Palette } from '@lucide/svelte';
 	import type { ComponentType, SvelteComponent } from 'svelte';
 
-	export let position = 'end'; // start, center, end
-	export let size = 'sm'; // sm, md, lg
-	export let menuType = 'dropdown'; // dropdown, toggle
-	export let additionalThemes = ['synthwave', 'cupcake']; // Additional themes beyond light/dark
+	interface Props {
+		position?: string; // start, center, end
+		size?: string; // sm, md, lg
+		menuType?: string; // dropdown, toggle
+		additionalThemes?: any; // Additional themes beyond light/dark
+	}
 
-	let currentTheme = '';
+	let {
+		position = 'end',
+		size = 'sm',
+		menuType = 'dropdown',
+		additionalThemes = ['synthwave', 'cupcake']
+	}: Props = $props();
+
+	let currentTheme = $state('');
 	const baseThemes = ['light', 'dark', 'system'];
 	const allThemes = [...baseThemes, ...additionalThemes];
 
@@ -66,13 +75,14 @@
 		<input
 			type="checkbox"
 			checked={currentTheme === 'dark'}
-			on:change={(e) => applyTheme(e.currentTarget.checked ? 'dark' : 'light')}
+			onchange={(e) => applyTheme(e.currentTarget.checked ? 'dark' : 'light')}
 		/>
 		<Sun class="swap-off h-5 w-5 fill-current" />
 		<Moon class="swap-on h-5 w-5 fill-current" />
 	</label>
 {:else}
 	<!-- Dropdown theme selector using daisyUI's pattern but with proper ARIA roles -->
+	{@const SvelteComponent_1 = themeIcons[currentTheme] || themeIcons.system}
 	<div class="dropdown dropdown-{position}">
 		<div
 			tabindex="0"
@@ -80,20 +90,20 @@
 			aria-haspopup="menu"
 			class="btn btn-ghost btn-{size} btn-circle"
 		>
-			<svelte:component this={themeIcons[currentTheme] || themeIcons.system} class="h-5 w-5" />
+			<SvelteComponent_1 class="h-5 w-5" />
 		</div>
 
 		<div class="dropdown-content bg-base-100 rounded-box z-[1] shadow">
 			<ul role="menu" class="menu p-2">
 				{#each allThemes as theme}
+					{@const SvelteComponent_2 = themeIcons[theme] || themeIcons.system}
 					<li role="none">
 						<button
 							role="menuitem"
 							class={currentTheme === theme ? 'active' : ''}
-							on:click={() => applyTheme(theme)}
+							onclick={() => applyTheme(theme)}
 						>
-							<svelte:component
-								this={themeIcons[theme] || themeIcons.system}
+							<SvelteComponent_2
 								class="mr-2 h-4 w-4"
 							/>
 							<span class="capitalize">{theme}</span>
