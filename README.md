@@ -2,7 +2,7 @@
 
 A comprehensive starter template for modern SvelteKit applications with essential integrations.
 
-[View tagged release (2025-03-10)](https://github.com/angelsen/ai-factory/tree/2025-03-10)
+[View tagged release (2025-03-11+feature-codemirror)](https://github.com/angelsen/ai-factory/tree/2025-03-11+feature-codemirror)
 
 ## Features
 
@@ -16,7 +16,7 @@ A comprehensive starter template for modern SvelteKit applications with essentia
 
 ```bash
 # Clone the repository (specific release version)
-git clone -b 2025-03-10 https://github.com/angelsen/ai-factory.git my-app
+git clone -b 2025-03-11+feature-codemirror https://github.com/angelsen/ai-factory.git my-app
 
 # Navigate to project
 cd my-app
