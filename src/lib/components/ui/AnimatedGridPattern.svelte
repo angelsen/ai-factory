@@ -15,7 +15,7 @@
 		gridColor = 'primary', // Use DaisyUI primary color by default
 		duration = 4,
 		repeatDelay = 0.5,
-		className = ''
+		class: customClass = ''
 	} = $props();
 
 	// Define types for our data structures
@@ -160,7 +160,7 @@
 
 <div
 	bind:this={containerRef}
-	class={`pointer-events-none inset-0 w-full h-full overflow-hidden ${className}`}
+	class={`pointer-events-none inset-0 w-full h-full overflow-hidden ${customClass}`}
 	aria-hidden="true"
 >
 	<svg class="absolute inset-0 h-full w-full" xmlns="http://www.w3.org/2000/svg">

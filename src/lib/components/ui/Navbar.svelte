@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Menu, Github } from '@lucide/svelte';
+	import { Menu, Github, Sparkles } from '@lucide/svelte';
 	import ThemeController from './ThemeController.svelte';
 
 	interface Props {
@@ -15,7 +15,7 @@
 	}: Props = $props();
 </script>
 
-<div class="navbar bg-base-100 shadow-sm">
+<div class="navbar bg-base-100 shadow-sm h-16 min-h-[4rem]">
 	<div class="navbar-start">
 		<div class="dropdown">
 			<button class="btn btn-ghost lg:hidden">
@@ -33,7 +33,24 @@
 				</li>
 			</div>
 		</div>
-		<a href="/" class="btn btn-ghost text-xl">{logo}</a>
+		<div class="navbar-start flex items-center lg:justify-start justify-center">
+			<div class="relative group">
+				<a 
+					href="/" 
+					class="btn btn-ghost text-xl relative z-10 group-hover:scale-100 transition-transform duration-300 flex items-center gap-2"
+				>
+					AI Factory
+					<div class="relative">
+						<Sparkles 
+							class="h-5 w-5 text-secondary" 
+							strokeWidth={1.5} 
+						/>
+						<div class="absolute inset-0 rounded-full blur-md bg-secondary/30 -z-10 scale-150 animate-pulse"></div>
+					</div>
+				</a>
+				<div class="absolute inset-0 bg-secondary/20 blur-md opacity-0 group-hover:opacity-100 rounded-lg transition-all duration-300 -z-10 scale-110 animate-pulse"></div>
+			</div>
+		</div>
 	</div>
 	<div class="navbar-center hidden lg:flex">
 		<ul class="menu menu-horizontal px-1">

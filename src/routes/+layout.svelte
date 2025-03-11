@@ -3,11 +3,10 @@
 	import '../app.css';
 	import Navbar from '$lib/components/ui/Navbar.svelte';
 	import AnimatedGridPattern from '$lib/components/ui/AnimatedGridPattern.svelte';
+	import Footer from '$lib/components/ui/Footer.svelte';
 	import { initTheme } from '$lib/theme';
 
 	let { children } = $props();
-
-	const currentYear = new Date().getFullYear();
 
 	onMount(() => {
 		// Initialize theme on client side
@@ -15,7 +14,7 @@
 	});
 </script>
 
-<div class="relative flex min-h-screen flex-col overflow-hidden">
+<div class="relative flex min-h-screen flex-col overflow-x-hidden">
 	<!-- Global background pattern -->
 	<AnimatedGridPattern
 		numSquares={30}
@@ -25,7 +24,7 @@
 		repeatDelay={1}
 		squareColor="secondary"
 		gridColor="primary"
-		className="absolute -z-10 [mask-image:radial-gradient(70%_70%_at_center,white,transparent)] inset-x-0 inset-y-0 h-full skew-y-12"
+		class="absolute -z-10 [mask-image:radial-gradient(70%_70%_at_center,white,transparent)] inset-x-0 inset-y-[-30%] h-[200%] skew-y-12"
 	/>
 	<Navbar logo="AI Factory" githubUrl="https://github.com/angelsen/ai-factory" />
 
@@ -33,9 +32,5 @@
 		{@render children()}
 	</main>
 
-	<footer class="footer footer-center bg-base-100 text-base-content p-4">
-		<aside>
-			<p>© {currentYear} - Fredrik Angelsen</p>
-		</aside>
-	</footer>
+	<Footer />
 </div>

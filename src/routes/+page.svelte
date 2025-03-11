@@ -3,7 +3,7 @@
 	import { Rocket, FileText, Sparkles, ArrowRight } from '@lucide/svelte';
 </script>
 
-<div class="hero min-h-[calc(100vh-64px-56px)]">
+<div class="hero min-h-[calc(100vh-8rem)]">
 	<div class="hero-content text-center">
 		<div class="max-w-md">
 			<div class="flex items-center justify-center gap-3 mb-2">
