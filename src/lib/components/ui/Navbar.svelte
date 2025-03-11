@@ -23,6 +23,7 @@
 			</button>
 			<div class="dropdown-content menu menu-sm bg-base-100 rounded-box z-[100] mt-3 p-2 shadow">
 				<li><a href="/">Home</a></li>
+				<li><a href="/factory">AI Factory</a></li>
 				<li><a href="/demo">Demo</a></li>
 				<li>
 					<a href="#auth-dropdown" aria-haspopup="true">Authentication</a>
@@ -56,6 +57,7 @@
 	<div class="navbar-center hidden lg:flex">
 		<ul class="menu menu-horizontal px-1">
 			<li><a href="/">Home</a></li>
+			<li><a href="/factory">AI Factory</a></li>
 			<li><a href="/demo">Demo</a></li>
 			<li>
 				<details>
