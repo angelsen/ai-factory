@@ -26,11 +26,18 @@
 		gridColor="primary"
 		class="absolute -z-10 [mask-image:radial-gradient(70%_70%_at_center,white,transparent)] inset-x-0 inset-y-[-30%] h-[200%] skew-y-12"
 	/>
-	<Navbar logo="AI Factory" githubUrl="https://github.com/angelsen/ai-factory" />
+	<!-- Fixed header -->
+	<header class="sticky top-0 z-20">
+		<Navbar logo="AI Factory" githubUrl="https://github.com/angelsen/ai-factory" />
+	</header>
 
+	<!-- Main content area -->
 	<main class="flex-grow">
 		{@render children()}
 	</main>
 
-	<Footer />
+	<!-- Fixed footer -->
+	<footer class="z-10">
+		<Footer />
+	</footer>
 </div>

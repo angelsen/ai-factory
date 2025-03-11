@@ -37,18 +37,19 @@
 			<div class="relative group">
 				<a 
 					href="/" 
-					class="btn btn-ghost text-xl relative z-10 group-hover:scale-100 transition-transform duration-300 flex items-center gap-2"
+					class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xl font-medium relative z-10 group-hover:scale-105 transition-all duration-300 bg-transparent group-hover:text-accent"
 				>
-					AI Factory
+					<span>AI Factory</span>
 					<div class="relative">
 						<Sparkles 
-							class="h-5 w-5 text-secondary" 
+							class="h-5 w-5 text-secondary group-hover:text-accent transition-colors duration-300" 
 							strokeWidth={1.5} 
 						/>
-						<div class="absolute inset-0 rounded-full blur-md bg-secondary/30 -z-10 scale-150 animate-pulse"></div>
+						<div class="absolute inset-0 rounded-full blur-lg bg-secondary/60 -z-10 scale-[2] group-hover:bg-accent/70 group-hover:scale-[2.5] transition-all duration-300"></div>
 					</div>
 				</a>
-				<div class="absolute inset-0 bg-secondary/20 blur-md opacity-0 group-hover:opacity-100 rounded-lg transition-all duration-300 -z-10 scale-110 animate-pulse"></div>
+				<!-- Glow effect container -->
+				<div class="absolute inset-0 bg-gradient-to-r from-primary/30 via-secondary/40 to-accent/30 blur-xl opacity-0 group-hover:opacity-100 rounded-lg transition-all duration-500 -z-10 scale-110 group-hover:scale-125"></div>
 			</div>
 		</div>
 	</div>

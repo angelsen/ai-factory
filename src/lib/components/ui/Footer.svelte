@@ -5,7 +5,7 @@
     const currentYear = new Date().getFullYear();
 </script>
 
-<footer class="footer footer-center bg-base-200 text-base-content p-6 rounded-t-lg h-16 min-h-[4rem] flex items-center justify-between">
+<footer class="footer footer-center bg-base-200 text-base-content p-6 rounded-t-lg h-16 min-h-[4rem] flex items-center justify-between sticky bottom-0">
     <div class="flex items-center gap-4">
         <Sparkles 
             class="h-6 w-6 text-secondary opacity-70 hover:opacity-100 transition-opacity" 
