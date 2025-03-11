@@ -22,17 +22,21 @@
   }: Props = $props();
 </script>
 
-<div class="space-y-4">
-  <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+<div class="space-y-6">
+  <div class="border-b border-base-300 pb-2">
+    <h3 class="text-lg font-medium">Basic Information</h3>
+  </div>
+
+  <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
     <!-- Function Name -->
-    <div class="form-control">
+    <div class="form-control w-full">
       <label class="label" for="function-name">
-        <span class="label-text">Function Name</span>
+        <span class="label-text font-medium">Function Name</span>
       </label>
       <input 
         id="function-name"
         type="text" 
-        class="input input-bordered" 
+        class="input input-bordered w-full" 
         value={name}
         onchange={(e) => setName(e.currentTarget.value)}
         required 
@@ -42,9 +46,11 @@
     </div>
     
     <!-- Active Toggle -->
-    <div class="form-control">
-      <div class="h-10"></div> <!-- Spacer to align with other field -->
-      <label class="label cursor-pointer justify-start gap-2" for="function-active">
+    <div class="form-control w-full flex items-center">
+      <label class="label self-start" for="function-active">
+        <span class="label-text font-medium">Status</span>
+      </label>
+      <div class="flex items-center gap-2 mt-2">
         <input 
           id="function-active" 
           type="checkbox" 
@@ -53,19 +59,19 @@
           onchange={(e) => setIsActive(e.currentTarget.checked)} 
           disabled={isReadOnly}
         />
-        <span class="label-text">Active</span>
-      </label>
+        <span class="text-sm">{isActive ? 'Active' : 'Inactive'}</span>
+      </div>
     </div>
   </div>
   
   <!-- Description -->
-  <div class="form-control">
+  <div class="form-control w-full">
     <label class="label" for="description">
-      <span class="label-text">Description</span>
+      <span class="label-text font-medium">Description</span>
     </label>
     <textarea 
       id="description"
-      class="textarea textarea-bordered min-h-24" 
+      class="textarea textarea-bordered min-h-24 w-full" 
       value={description}
       onchange={(e) => setDescription(e.currentTarget.value)}
       placeholder="What does this function do?"

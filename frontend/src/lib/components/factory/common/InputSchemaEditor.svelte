@@ -46,39 +46,45 @@
   }
 </script>
 
-<div class="form-control">
-  <div id="input-schema-container">
-    <label class="label flex justify-between" for="input-schema-editor">
-      <span class="label-text">Input Schema (JSON)</span>
-      <div class="space-x-2">
-        <button 
-          type="button" 
-          class="btn btn-xs" 
-          onclick={() => formatJson()}
-          disabled={isReadOnly}
-        >
-          Format
-        </button>
-        <button 
-          type="button" 
-          class="btn btn-xs btn-outline" 
-          onclick={() => resetToDefault()}
-          disabled={isReadOnly}
-        >
-          Reset
-        </button>
+<div class="space-y-6 mt-6">
+  <div class="border-b border-base-300 pb-2">
+    <h3 class="text-lg font-medium">Input Parameters</h3>
+  </div>
+
+  <div class="form-control w-full">
+    <div id="input-schema-container" class="w-full">
+      <label class="label flex justify-between" for="input-schema-editor">
+        <span class="label-text font-medium">Input Schema (JSON)</span>
+        <div class="space-x-2">
+          <button 
+            type="button" 
+            class="btn btn-xs" 
+            onclick={() => formatJson()}
+            disabled={isReadOnly}
+          >
+            Format
+          </button>
+          <button 
+            type="button" 
+            class="btn btn-xs btn-outline" 
+            onclick={() => resetToDefault()}
+            disabled={isReadOnly}
+          >
+            Reset
+          </button>
+        </div>
+      </label>
+      <JsonEditor
+        bind:this={jsonEditor}
+        value={schema}
+        onChange={(val) => setSchema(val)}
+        height="200px"
+        lineWrapping={true}
+        readOnly={isReadOnly}
+      />
+      <div class="label">
+        <span class="label-text-alt">Define the input parameters your function accepts</span>
       </div>
-    </label>
-    <JsonEditor
-      bind:this={jsonEditor}
-      value={schema}
-      onChange={(val) => setSchema(val)}
-      height="200px"
-      lineWrapping={true}
-      readOnly={isReadOnly}
-    />
-    <div class="label">
-      <span class="label-text-alt">Define the input parameters your function accepts</span>
     </div>
   </div>
 </div>

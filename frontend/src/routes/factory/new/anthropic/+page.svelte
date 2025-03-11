@@ -2,7 +2,7 @@
   import AnthropicEditor from '$lib/components/factory/providers/AnthropicEditor.svelte';
 </script>
 
-<div class="container mx-auto pb-8 px-4">
+<div class="container mx-auto px-4 py-6">
   <div class="mb-6">
     <h1 class="text-2xl font-bold">Create Anthropic Function</h1>
     <p class="text-sm opacity-75">Configure a new function powered by Claude</p>

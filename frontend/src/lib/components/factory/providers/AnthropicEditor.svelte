@@ -267,18 +267,20 @@
         />
         
         <!-- Anthropic-specific settings -->
-        <div class="space-y-4">
-          <h3 class="text-lg font-medium">Anthropic Configuration</h3>
+        <div class="space-y-6 mt-6">
+          <div class="border-b border-base-300 pb-2">
+            <h3 class="text-lg font-medium">Anthropic Configuration</h3>
+          </div>
           
-          <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
             <!-- Model Selection -->
-            <div class="form-control">
+            <div class="form-control w-full">
               <label class="label" for="model-select">
-                <span class="label-text">Claude Model</span>
+                <span class="label-text font-medium">Claude Model</span>
               </label>
               <select 
                 id="model-select" 
-                class="select select-bordered" 
+                class="select select-bordered w-full" 
                 value={model}
                 onchange={(e) => model = e.currentTarget.value}
                 disabled={isReadOnly}
@@ -290,31 +292,34 @@
             </div>
             
             <!-- Max Tokens -->
-            <div class="form-control">
+            <div class="form-control w-full">
               <label class="label" for="max-tokens">
-                <span class="label-text">Max Tokens</span>
+                <span class="label-text font-medium">Max Tokens</span>
               </label>
               <input 
                 id="max-tokens"
                 type="number" 
-                class="input input-bordered" 
+                class="input input-bordered w-full" 
                 value={maxTokens}
                 onchange={(e) => maxTokens = parseInt(e.currentTarget.value, 10)}
                 min="1"
                 max="100000"
                 disabled={isReadOnly}
               />
+              <div class="label">
+                <span class="label-text-alt">Maximum number of tokens in the response</span>
+              </div>
             </div>
           </div>
           
           <!-- System Prompt -->
-          <div class="form-control">
+          <div class="form-control w-full">
             <label class="label" for="system-prompt">
-              <span class="label-text">System Prompt</span>
+              <span class="label-text font-medium">System Prompt</span>
             </label>
             <textarea 
               id="system-prompt"
-              class="textarea textarea-bordered min-h-32" 
+              class="textarea textarea-bordered min-h-32 w-full" 
               value={systemPrompt}
               onchange={(e) => systemPrompt = e.currentTarget.value}
               placeholder="You are a helpful assistant specialized in..."
@@ -323,13 +328,13 @@
           </div>
           
           <!-- Prompt Template -->
-          <div class="form-control">
+          <div class="form-control w-full">
             <label class="label" for="prompt-template">
-              <span class="label-text">Prompt Template</span>
+              <span class="label-text font-medium">Prompt Template</span>
             </label>
             <textarea 
               id="prompt-template"
-              class="textarea textarea-bordered min-h-24" 
+              class="textarea textarea-bordered min-h-24 w-full" 
               value={promptTemplate}
               onchange={(e) => promptTemplate = e.currentTarget.value}
               placeholder="Example prompt template with variables"
@@ -341,8 +346,8 @@
           </div>
           
           <!-- Tools toggle -->
-          <div class="form-control">
-            <label class="label cursor-pointer justify-start gap-2" for="use-tools">
+          <div class="form-control w-full border-t border-base-300 pt-4">
+            <label class="label cursor-pointer justify-start gap-4" for="use-tools">
               <input 
                 id="use-tools" 
                 type="checkbox" 
@@ -351,16 +356,16 @@
                 onchange={(e) => useTools = e.currentTarget.checked}
                 disabled={isReadOnly}
               />
-              <span class="label-text">Use Claude Tools (Function Calling)</span>
+              <span class="label-text font-medium">Use Claude Tools (Function Calling)</span>
             </label>
           </div>
           
           <!-- Tools JSON -->
           {#if useTools}
-            <div class="form-control">
-              <div id="tools-container">
+            <div class="form-control w-full">
+              <div id="tools-container" class="w-full">
                 <label class="label flex justify-between" for="tools-editor">
-                  <span class="label-text">Tools Definition (JSON)</span>
+                  <span class="label-text font-medium">Tools Definition (JSON)</span>
                   <div class="space-x-2">
                     <button 
                       type="button" 
