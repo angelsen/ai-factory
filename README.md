@@ -1,88 +1,74 @@
-# SvelteKit Starter Kit
+# AI Factory
 
-A comprehensive starter template for modern SvelteKit applications with essential integrations.
+A flexible system for creating and managing AI function calls across different providers (Anthropic, Perplexity, Ollama) through a unified interface.
 
-[View tagged release (2025-03-11+feature-codemirror)](https://github.com/angelsen/ai-factory/tree/2025-03-11+feature-codemirror)
+## Overview
 
-## Features
+AI Factory allows you to create, test, and execute functions with various AI providers through a configuration-driven system. It stores function definitions (including input schemas, implementation details, and AI prompts) as configurations in a database, which can be edited through the web interface.
 
-- **SvelteKit**: Modern Svelte framework with server-side rendering
-- **DaisyUI v5**: Component library for Tailwind CSS with theming
-- **Lucide**: Beautiful, consistent icon set
-- **Lucia**: Authentication framework
-- **Drizzle ORM**: Lightweight TypeScript ORM for SQL databases
+This approach allows non-developers to modify how functions work by updating text configurations rather than changing code, making the system highly adaptable.
 
-## Quick Start
+## Key Features
 
+- **No-Code Function Creation**: Define new API endpoints through the web interface
+- **Multiple Implementation Types**:
+  - Claude API integration for AI-powered functions
+  - Other provider integrations (Perplexity, Ollama)
+  - Database queries for data operations
+  - Python code for custom logic
+- **Configurable Input Schemas**: Define expected input format using JSON Schema
+- **REST API Endpoints**: Each function is automatically exposed as a REST endpoint
+- **Modern Web Interface**: Manage functions through a responsive Svelte frontend
+
+## Components
+
+- **Backend**: FastAPI API (/backend)
+- **Frontend**: Svelte UI (/frontend)
+
+## Development
+
+### Backend
 ```bash
-# Clone the repository (specific release version)
-git clone -b 2025-03-11+feature-codemirror https://github.com/angelsen/ai-factory.git my-app
+cd backend
+uv sync  # Install dependencies
+```
 
-# Navigate to project
-cd my-app
-
-# Install dependencies
+### Frontend
+```bash
+cd frontend
 npm install
-
-# Set up the database
-npm run db:push
-
-# Start development server
-npm run dev -- --open
+npm run dev
 ```
 
-## Included Components
-
-### UI Components
-- Fully typed and accessible UI components in `src/lib/components/ui`
-- Responsive Navbar with mobile menu
-- Card component with variants
-- Button component with multiple styles
-- Theme controller with light/dark and custom themes
-
-### Authentication
-- Lucia auth integration
-- Login form and user profile components
-- Authentication API routes
-
-### Database
-- Drizzle ORM setup
-- SQLite database for development
-- Schema definitions
-
-## Theme System
-
-The starter includes a comprehensive theme system:
-- Light/dark mode toggle
-- System preference detection
-- Custom theme selection
-- Theme persistence with localStorage
-
-## Customization
-
-### Adding New Components
-Place new UI components in `src/lib/components/ui/`. Follow the existing pattern for TypeScript typing and props.
-
-### Modifying Themes
-Edit theme configurations in `src/app.css` and `src/lib/theme.ts`.
-
-### Database Schema
-Modify the database schema in `src/lib/server/db/schema.ts`.
-
-## Building and Deployment
+### Running the Application
 
 ```bash
-# Build the application
-npm run build
+# Start the backend
+./run_backend.sh
 
-# Preview the production build
-npm run preview
+# Start the frontend 
+./run_frontend.sh
 ```
 
-## License
+Access the web interface at http://localhost:5173  
+API documentation is available at http://localhost:8000/docs
 
-MIT
+## Integration with other services
 
----
+Other applications can call AI Factory functions via its REST API:
 
-Made with ♥ by Fredrik Angelsen
+```python
+import requests
+
+# Call a function
+response = requests.post(
+    "http://localhost:8000/api/functions/function_name",
+    json={"inputs": {"param1": "value1", "param2": "value2"}}
+)
+
+result = response.json()
+```
+
+## Example: Car Repair Wiki Generation
+
+The system includes a sample function for generating structured wiki articles from car repair messages that demonstrates the power of AI-driven function execution.

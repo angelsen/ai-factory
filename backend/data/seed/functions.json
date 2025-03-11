@@ -1,0 +1,123 @@
+[
+  {
+    "name": "generate_car_repair_wiki",
+    "description": "Generates a structured wiki from a car repair message",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "message_content": {
+          "type": "string",
+          "description": "The content of the message to analyze"
+        },
+        "sender": {
+          "type": "string",
+          "description": "The sender of the message"
+        },
+        "api_key": {
+          "type": "string",
+          "description": "API key for Claude API (provided by the calling service)"
+        },
+        "access_token": {
+          "type": "string",
+          "description": "Optional access token for fetching images"
+        }
+      },
+      "required": ["message_content", "sender"]
+    },
+    "implementation_type": "anthropic",
+    "implementation_config": {
+      "model": "claude-3-5-sonnet-20240620",
+      "max_tokens": 2000,
+      "system_prompt": "You are an automotive repair expert creating a structured wiki article for a car repair database.\nYour task is to CAREFULLY analyze the input message and extract ALL information about a vehicle repair issue and solution.\n\nFirst, ALWAYS identify these key pieces of information:\n- Vehicle make (e.g., MAN, Volvo, Scania, BMW)\n- Vehicle model (e.g., TGL 12.250, FH16, R450, 5-Series)\n- Registration number if present\n- ALL error/fault codes mentioned\n\nFor heavy duty vehicles and trucks, pay SPECIAL attention to:\n1. Complete error codes with FMI numbers (like \"Error 3818 FMI:1\") - THESE ARE CRITICAL\n2. System components (sensors, valves, modules, controllers)\n3. Environmental conditions when the fault occurred (temperature, weather)\n\nNEVER leave the vehicle make and model fields empty if they appear in the message.\nIf you see \"MAN TGL 12.250\" you MUST extract make=\"MAN\" and model=\"TGL 12.250\".\n\nAlways provide a clear, descriptive title that includes the make, model and primary issue (e.g., \"MAN TGL 12.250 - Exhaust Back Pressure Valve Repair\").\n\nFocus on creating a technically accurate and useful repair guide that a mechanic could follow to fix the same issue.",
+      "tools": [
+        {
+          "name": "create_repair_wiki",
+          "description": "Creates a structured wiki entry for car repair information",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "description": "A concise title for the repair article that includes vehicle make, model and main issue"
+              },
+              "vehicle_make": {
+                "type": "string",
+                "description": "The make of the vehicle (e.g., Toyota, BMW, MAN, Volvo)"
+              },
+              "vehicle_model": {
+                "type": "string",
+                "description": "The model of the vehicle (e.g., Corolla, 3-Series, TGL 12.250)"
+              },
+              "vehicle_year": {
+                "type": "string",
+                "description": "The year or model year of the vehicle if available"
+              },
+              "registration_number": {
+                "type": "string",
+                "description": "Vehicle registration number if mentioned"
+              },
+              "error_codes": {
+                "type": "array",
+                "items": {"type": "string"},
+                "description": "List of error codes mentioned (e.g., 'Error 3818 FMI:1')"
+              },
+              "issue_description": {
+                "type": "string",
+                "description": "A detailed description of the issue/problem including symptoms and conditions"
+              },
+              "affected_components": {
+                "type": "array",
+                "items": {"type": "string"},
+                "description": "List of affected components or systems (e.g., exhaust pressure sensor, brake system)"
+              },
+              "solution": {
+                "type": "string",
+                "description": "The detailed solution or repair procedure that was successful"
+              },
+              "parts_needed": {
+                "type": "array",
+                "items": {"type": "string"},
+                "description": "List of parts needed for the repair (if any)"
+              },
+              "tools_needed": {
+                "type": "array",
+                "items": {"type": "string"},
+                "description": "List of tools needed for the repair (if any)"
+              },
+              "difficulty_level": {
+                "type": "string",
+                "enum": ["Easy", "Moderate", "Difficult", "Professional"],
+                "description": "The difficulty level of the repair"
+              },
+              "estimated_time": {
+                "type": "string",
+                "description": "Estimated time to complete the repair"
+              },
+              "technician_notes": {
+                "type": "string",
+                "description": "Any additional notes or observations from the technician"
+              },
+              "environmental_factors": {
+                "type": "string",
+                "description": "Environmental factors that may have contributed to the issue (temperature, weather, etc.)"
+              },
+              "related_issues": {
+                "type": "array",
+                "items": {"type": "string"},
+                "description": "Related issues that might have similar symptoms or causes"
+              }
+            },
+            "required": [
+              "title",
+              "vehicle_make",
+              "vehicle_model", 
+              "issue_description",
+              "solution"
+            ]
+          }
+        }
+      ],
+      "prompt_template": "Message from {sender}:\n\n{message_content}\n\nPlease analyze this message and create a structured repair wiki entry with all the relevant details."
+    }
+  }
+]
